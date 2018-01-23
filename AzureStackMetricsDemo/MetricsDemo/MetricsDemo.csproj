@@ -94,7 +94,7 @@
     <Compile Include="IMetricProvider.cs" />
     <Compile Include="MetricProvider.cs" />
     <Compile Include="MetricProviderFactory.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="GetMetrics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

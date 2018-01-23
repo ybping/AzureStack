@@ -59,7 +59,7 @@
         public string GetAuthorizationHeaderToken()
         {
             AuthenticationResult result = null;
-            var authenticationContext = new AuthenticationContext(string.Format(this.AadAuthority, this.TenantId));
+            var authenticationContext = new AuthenticationContext(this.AadAuthority + this.TenantId);
             var credential = new ClientCredential(this.ClientId, this.ClientSecret);
             result = authenticationContext.AcquireTokenAsync(this.AadAudience, credential).Result;
             if (result == null)
@@ -102,6 +102,7 @@
             List<string> results = new List<string>();
 
             var metricsDefinitions = GetMetricsDefinitions(resourceUrl, filter).Result;
+            Console.WriteLine(metricsDefinitions);
             var jsonData = JObject.Parse(metricsDefinitions);
             var measurementValues = jsonData["value"];
             foreach (var measurement in measurementValues)
@@ -109,6 +110,12 @@
                 var metricAvailabilities = measurement["metricAvailabilities"];
                 foreach(var metrics in metricAvailabilities)
                 {
+                    var timeGrain = metrics["timeGrain"].ToString();
+                    if(timeGrain != "PT1M")
+                    {
+                        Console.WriteLine($"Skip TimeGrain {timeGrain}, only print PT1M metrics data");
+                        continue;
+                    }
                     var location = metrics["location"];
                     // Parse the table info where the metrics value stored
                     var tableEndpoint = location["tableEndpoint"].ToString();
